@@ -9,12 +9,11 @@ namespace BasicServerHTTPlistener
 {
     internal class Program
     {
-
-        public static HttpListener Listener;
-        public static string Url = "http://localhost:8080/";
-        public static int PageViews = 0;
-        public static int RequestCount = 0;
-        public static string PageData = "";
+        private static HttpListener Listener;
+        private const string Url = "http://localhost:8080/";
+        private static int PageViews = 0;
+        private static int RequestCount = 0;
+        private const string PageData = "";
 
         public static async Task HandleIncomingConnections()
         {
@@ -32,7 +31,6 @@ namespace BasicServerHTTPlistener
 
                 Console.WriteLine($"Request #: {++RequestCount}");
                 Header.ShowHeaders(req);
-
 
 
                 // If `shutdown` url requested w/ POST, then shutdown the server after serving the page
