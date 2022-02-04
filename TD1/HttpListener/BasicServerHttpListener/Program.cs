@@ -9,11 +9,11 @@ namespace BasicServerHTTPlistener
 {
     internal class Program
     {
-        private static HttpListener Listener;
+        private static HttpListener _listener;
         private const string Url = "http://localhost:8080/";
-        private static int PageViews = 0;
-        private static int RequestCount = 0;
-        private const string PageData = "";
+        private static readonly int _pageViews = 0;
+        private static int _requestCount = 0;
+        private static string _pageData = "";
 
         public static async Task HandleIncomingConnections()
         {
@@ -23,13 +23,13 @@ namespace BasicServerHTTPlistener
             while (runServer)
             {
                 // Will wait here until we hear from a connection
-                HttpListenerContext ctx = await Listener.GetContextAsync();
+                HttpListenerContext ctx = await _listener.GetContextAsync();
 
                 // Peel out the requests and response objects
                 HttpListenerRequest req = ctx.Request;
                 HttpListenerResponse resp = ctx.Response;
 
-                Console.WriteLine($"Request #: {++RequestCount}");
+                Console.WriteLine($"Request #: {++_requestCount}");
                 Header.ShowHeaders(req);
 
 
@@ -42,7 +42,7 @@ namespace BasicServerHTTPlistener
 
                 // Write the response info
                 string disableSubmit = !runServer ? "disabled" : "";
-                byte[] data = Encoding.UTF8.GetBytes(string.Format(PageData, PageViews, disableSubmit));
+                byte[] data = Encoding.UTF8.GetBytes(string.Format(_pageData, _pageViews, disableSubmit));
                 resp.ContentType = "text/html";
                 resp.ContentEncoding = Encoding.UTF8;
                 resp.ContentLength64 = data.LongLength;
@@ -59,12 +59,12 @@ namespace BasicServerHTTPlistener
             //CHARGE la page HTML statiquement
             var indexStream = File.OpenRead(@"D:\Polytech\SI4\S8\SOC\eiin839\TD1\HttpListener\BasicServerHttpListener\Views\index.html");
             using (var reader = new StreamReader(indexStream))
-                PageData = reader.ReadToEnd();
+                _pageData = reader.ReadToEnd();
 
             // Create a Http server and start listening for incoming connections
-            Listener = new HttpListener();
-            Listener.Prefixes.Add(Url);
-            Listener.Start();
+            _listener = new HttpListener();
+            _listener.Prefixes.Add(Url);
+            _listener.Start();
             Console.WriteLine("Listening for connections on {0}", Url);
 
             // Handle requests
@@ -72,7 +72,7 @@ namespace BasicServerHTTPlistener
             listenTask.GetAwaiter().GetResult();
 
             // Close the listener
-            Listener.Close();
+            _listener.Close();
         }
     }
 }
