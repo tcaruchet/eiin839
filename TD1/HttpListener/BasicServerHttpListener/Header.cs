@@ -22,6 +22,7 @@ namespace ConsoleApp3
             Console.WriteLine($"Host : {req.Headers.Get("Host")}");
             Console.WriteLine($"User-Agent : {req.Headers.Get("User-Agent")}");
             Console.WriteLine(req.HttpMethod);
+            Console.WriteLine(req.Url.ToString());
             Console.WriteLine(Environment.NewLine);
         }
     }

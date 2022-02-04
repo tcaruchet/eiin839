@@ -11,7 +11,7 @@ namespace BasicServerHTTPlistener
     {
 
         public static HttpListener Listener;
-        public static string Url = "http://localhost:8000/";
+        public static string Url = "http://localhost:8080/";
         public static int PageViews = 0;
         public static int RequestCount = 0;
         public static string PageData = "";
@@ -42,13 +42,9 @@ namespace BasicServerHTTPlistener
                     runServer = false;
                 }
 
-                // Make sure we don't increment the page views counter if `favicon.ico` is requested
-                if (req.Url.AbsolutePath != "/favicon.ico")
-                    PageViews += 1;
-
                 // Write the response info
                 string disableSubmit = !runServer ? "disabled" : "";
-                byte[] data = Encoding.UTF8.GetBytes(String.Format(PageData, PageViews, disableSubmit));
+                byte[] data = Encoding.UTF8.GetBytes(string.Format(PageData, PageViews, disableSubmit));
                 resp.ContentType = "text/html";
                 resp.ContentEncoding = Encoding.UTF8;
                 resp.ContentLength64 = data.LongLength;
