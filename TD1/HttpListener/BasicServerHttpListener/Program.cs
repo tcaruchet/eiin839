@@ -1,88 +1,78 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text;
+using System.Net;
+using System.Threading.Tasks;
+using ConsoleApp3;
 
 namespace BasicServerHTTPlistener
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static HttpListener _listener;
+        private const string Url = "http://localhost:8080/";
+        private static readonly int _pageViews = 0;
+        private static int _requestCount = 0;
+        private static string _pageData = "";
+
+        public static async Task HandleIncomingConnections()
         {
-            
+            bool runServer = true;
 
-            if (!HttpListener.IsSupported)
+            // While a user hasn't visited the `shutdown` url, keep on handling requests
+            while (runServer)
             {
-                Console.WriteLine("A more recent Windows version is required to use the HttpListener class.");
-                return;
-            }
+                // Will wait here until we hear from a connection
+                HttpListenerContext ctx = await _listener.GetContextAsync();
 
-            // Create a listener.
-            HttpListener listener = new HttpListener();
+                // Peel out the requests and response objects
+                HttpListenerRequest req = ctx.Request;
+                HttpListenerResponse resp = ctx.Response;
 
-            // Trap Ctrl-C and exit 
-            Console.CancelKeyPress += delegate
-            {
-                listener.Stop();
-                System.Environment.Exit(0);
-            };
+                Console.WriteLine($"Request #: {++_requestCount}");
+                Header.ShowHeaders(req);
 
-            // Add the prefixes.
-            if (args.Length != 0)
-            {
-                foreach (string s in args)
+
+                // If `shutdown` url requested w/ POST, then shutdown the server after serving the page
+                if ((req.HttpMethod == "POST") && (req.Url.AbsolutePath == "/shutdown"))
                 {
-                    listener.Prefixes.Add(s);
-                    // don't forget to authorize access to the TCP/IP addresses localhost:xxxx and localhost:yyyy 
-                    // with netsh http add urlacl url=http://localhost:xxxx/ user="Tout le monde"
-                    // and netsh http add urlacl url=http://localhost:yyyy/ user="Tout le monde"
-                    // user="Tout le monde" is language dependent, use user=Everyone in english 
-
+                    Console.WriteLine("Shutdown requested");
+                    runServer = false;
                 }
-            }
-            else
-            {
-                Console.WriteLine("Syntax error: the call must contain at least one web server url as argument");
-            }
-            listener.Start();
-            foreach (string s in args)
-            {
-                Console.WriteLine("Listening for connections on " + s);
-            }
 
-            while (true)
-            {
-                // Note: The GetContext method blocks while waiting for a request.
-                HttpListenerContext context = listener.GetContext();
-                HttpListenerRequest request = context.Request;
+                // Write the response info
+                string disableSubmit = !runServer ? "disabled" : "";
+                byte[] data = Encoding.UTF8.GetBytes(string.Format(_pageData, _pageViews, disableSubmit));
+                resp.ContentType = "text/html";
+                resp.ContentEncoding = Encoding.UTF8;
+                resp.ContentLength64 = data.LongLength;
 
-                string documentContents;
-                using (Stream receiveStream = request.InputStream)
-                {
-                    using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
-                    {
-                        documentContents = readStream.ReadToEnd();
-                    }
-                }
-                Console.WriteLine($"Received request for {request.Url}");
-                Console.WriteLine(documentContents);
-
-                // Obtain a response object.
-                HttpListenerResponse response = context.Response;
-
-                // Construct a response.
-                string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-                // Get a response stream and write the response to it.
-                response.ContentLength64 = buffer.Length;
-                System.IO.Stream output = response.OutputStream;
-                output.Write(buffer, 0, buffer.Length);
-                // You must close the output stream.
-                output.Close();
+                // Write out to the response stream (asynchronously), then close it
+                await resp.OutputStream.WriteAsync(data, 0, data.Length);
+                resp.Close();
             }
-            // Httplistener neither stop ...
-            // listener.Stop();
+        }
+
+
+        public static void Main(string[] args)
+        {
+            //CHARGE la page HTML statiquement
+            var indexStream = File.OpenRead(@"D:\Polytech\SI4\S8\SOC\eiin839\TD1\HttpListener\BasicServerHttpListener\Views\index.html");
+            using (var reader = new StreamReader(indexStream))
+                _pageData = reader.ReadToEnd();
+
+            // Create a Http server and start listening for incoming connections
+            _listener = new HttpListener();
+            _listener.Prefixes.Add(Url);
+            _listener.Start();
+            Console.WriteLine("Listening for connections on {0}", Url);
+
+            // Handle requests
+            Task listenTask = HandleIncomingConnections();
+            listenTask.GetAwaiter().GetResult();
+
+            // Close the listener
+            _listener.Close();
         }
     }
 }
