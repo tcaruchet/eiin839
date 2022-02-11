@@ -124,6 +124,8 @@ namespace BasicServerHTTPlistener
                 try
                 {
                     responseString = (string)method.Invoke(c, new object[]{ request.QueryString });
+                    if (string.IsNullOrWhiteSpace(responseString))
+                        response.StatusCode = (int) HttpStatusCode.BadRequest;
                 }
                 catch (NullReferenceException)
                 {
