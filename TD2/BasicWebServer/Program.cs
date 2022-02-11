@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Web;
+using BasicWebServer;
 
 namespace BasicServerHTTPlistener
 {
@@ -97,6 +100,7 @@ namespace BasicServerHTTPlistener
                 Console.WriteLine(request.Url.Query);
 
                 //parse params in url
+                
                 Console.WriteLine("param1 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param1"));
                 Console.WriteLine("param2 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param2"));
                 Console.WriteLine("param3 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param3"));
@@ -108,8 +112,25 @@ namespace BasicServerHTTPlistener
                 // Obtain a response object.
                 HttpListenerResponse response = context.Response;
 
+                string methodCalled = request.Url.LocalPath.Replace("/", "");
+
                 // Construct a response.
-                string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
+                Type type = typeof(MyMethods);
+                MethodInfo method = type.GetMethods().FirstOrDefault(m =>
+                    m.Name.Equals(methodCalled, StringComparison.InvariantCultureIgnoreCase));
+                MyMethods c = new MyMethods();
+                string responseString = "";
+
+                try
+                {
+                    responseString = (string)method.Invoke(c, new object[]{ request.QueryString });
+                }
+                catch (NullReferenceException)
+                {
+                    responseString = $"Uanble to find method {methodCalled}";
+                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                }
+
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
                 // Get a response stream and write the response to it.
                 response.ContentLength64 = buffer.Length;
