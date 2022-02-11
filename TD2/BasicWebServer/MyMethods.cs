@@ -29,7 +29,7 @@ namespace BasicWebServer
         public string ExternalExeCall(NameValueCollection paramsCollection)
         {
             ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = @"D:\Polytech\SI4\S8\SOC\eiin839\TD2\ExecTest\bin\Debug\ExecTest.exe"; 
+            start.FileName = @"D:\Polytech\SI4\S8\SOC\eiin839\TD2\MyExec\bin\Debug\net6.0\MyExec.exe"; 
             start.Arguments = String.Join(",", paramsCollection.Cast<string>().Select(s => paramsCollection[s])); 
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
