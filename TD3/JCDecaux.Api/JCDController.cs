@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,17 @@ namespace JCDecaux.Api
         {
             List<Station> stations = await GetStations<List<Station>>(contractName);
             return stations.FirstOrDefault(s => s.Number.Equals(number));
+        }
+
+        public static async Task<Station> GetStationNearest(string contractName, Position position)
+        {
+            List<Station> stations = await GetStations<List<Station>>(contractName);
+            //return stations.FirstOrDefault(s => s.Position.Equals(position));
+            var nearest = stations.Select(x => new GeoCoordinate(x.Position.Latitude, x.Position.Longitude))
+                .OrderBy(x => x.GetDistanceTo(new GeoCoordinate(position.Latitude, position.Longitude)))
+                .First();
+            return stations.FirstOrDefault(s =>
+                new GeoCoordinate(s.Position.Latitude, s.Position.Longitude).Equals(nearest));
         }
     }
 }
