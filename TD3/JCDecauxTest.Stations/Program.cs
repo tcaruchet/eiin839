@@ -1,20 +1,22 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
-namespace JCDecauxTest.Contracts
+namespace JCDecauxTest.Stations
 {
     internal class Program
     {
+        static readonly HttpClient Client = new HttpClient();
+
         static async Task Main(string[] args)
         {
             try
             {
-                Console.WriteLine(await JCDecaux.Api.JCDController.GetAllContracts());
+                Console.WriteLine(await JCDecaux.Api.JCDController.GetStations(args.Length > 0 ? args[0] : string.Empty));
             }
             catch (HttpRequestException e)
             {
