@@ -10,21 +10,16 @@ namespace JCDecauxTest.Stations
 {
     internal class Program
     {
-        static readonly HttpClient Client = new HttpClient();
-
         static async Task Main(string[] args)
         {
             try
             {
-                Console.WriteLine(await JCDecaux.Api.JCDController.GetStations(args.Length > 0 ? args[0] : string.Empty));
+                Console.WriteLine(await JCDecaux.Api.JCDController.GetStations<object>(args.Length > 0 ? args[0] : string.Empty));
             }
             catch (HttpRequestException e)
             {
-                if (e != null && (e is HttpRequestException || e is JsonSerializationException))
-                {
-                    Console.WriteLine("\nException Caught!");
-                    Console.WriteLine("Message :{0} ", e.Message);
-                }
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
             }
             Console.ReadKey();
         }
