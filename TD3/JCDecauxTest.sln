@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JCDecauxTest.Contracts", "JCDecauxTest\JCDecauxTest.Contracts.csproj", "{83755E3C-AFEB-4E77-A4BD-943BBD294822}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JCDecaux.Api", "JCDecaux.Api\JCDecaux.Api.csproj", "{F872923F-6A45-418A-952E-73E377607B3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JCDecauxTest.Stations", "JCDecauxTest.Stations\JCDecauxTest.Stations.csproj", "{E9F24596-2892-43A4-A271-E5AB7E2A331C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JCDecauxTest.StationDetails", "JCDecauxTest.StationDetails\JCDecauxTest.StationDetails.csproj", "{A2DEDCEF-282D-4BC2-AEE7-343D08060C1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JCDecauxTest.NearestStation", "JCDecauxTest.NearestStation\JCDecauxTest.NearestStation.csproj", "{720B7CCC-3F98-4A50-9AE5-6C2960E4B942}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83755E3C-AFEB-4E77-A4BD-943BBD294822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83755E3C-AFEB-4E77-A4BD-943BBD294822}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83755E3C-AFEB-4E77-A4BD-943BBD294822}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83755E3C-AFEB-4E77-A4BD-943BBD294822}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F872923F-6A45-418A-952E-73E377607B3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F872923F-6A45-418A-952E-73E377607B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F872923F-6A45-418A-952E-73E377607B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F872923F-6A45-418A-952E-73E377607B3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9F24596-2892-43A4-A271-E5AB7E2A331C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9F24596-2892-43A4-A271-E5AB7E2A331C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9F24596-2892-43A4-A271-E5AB7E2A331C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9F24596-2892-43A4-A271-E5AB7E2A331C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2DEDCEF-282D-4BC2-AEE7-343D08060C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2DEDCEF-282D-4BC2-AEE7-343D08060C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2DEDCEF-282D-4BC2-AEE7-343D08060C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2DEDCEF-282D-4BC2-AEE7-343D08060C1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{720B7CCC-3F98-4A50-9AE5-6C2960E4B942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{720B7CCC-3F98-4A50-9AE5-6C2960E4B942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{720B7CCC-3F98-4A50-9AE5-6C2960E4B942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{720B7CCC-3F98-4A50-9AE5-6C2960E4B942}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D524F601-58CC-4B3F-9CCE-9D310065C5DE}
+	EndGlobalSection
+EndGlobal
