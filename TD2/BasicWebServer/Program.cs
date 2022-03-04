@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -7,6 +8,10 @@ using System.Reflection;
 using System.Text;
 using System.Web;
 using BasicWebServer;
+using BasicWebServer.Helpers;
+using BasicWebServer.Parsers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BasicServerHTTPlistener
 {
@@ -14,6 +19,10 @@ namespace BasicServerHTTPlistener
     {
         private static void Main(string[] args)
         {
+            Console.WriteLine(TCaruchet.Header); //Header
+            Console.WriteLine(TCaruchet.Body);
+
+            Console.WriteLine("\n\r TD2 noté - 04/03/2022");
 
             //if HttpListener is not supported by the Framework
             if (!HttpListener.IsSupported)
@@ -21,7 +30,6 @@ namespace BasicServerHTTPlistener
                 Console.WriteLine("A more recent Windows version is required to use the HttpListener class.");
                 return;
             }
- 
  
             // Create a listener.
             HttpListener listener = new HttpListener();
@@ -32,30 +40,37 @@ namespace BasicServerHTTPlistener
                 foreach (string s in args)
                 {
                     listener.Prefixes.Add(s);
-                    // don't forget to authorize access to the TCP/IP addresses localhost:xxxx and localhost:yyyy 
-                    // with netsh http add urlacl url=http://localhost:xxxx/ user="Tout le monde"
-                    // and netsh http add urlacl url=http://localhost:yyyy/ user="Tout le monde"
-                    // user="Tout le monde" is language dependent, use user=Everyone in english 
+                    // authorize access to the TCP/IP addresses localhost:xxxx and localhost:yyyy 
+                    // netsh http add urlacl url=http://localhost:8080/ user="Tout le monde"
+                    // and netsh http add urlacl url=http://localhost:8081/ user="Tout le monde"
 
                 }
             }
             else
-            {
                 Console.WriteLine("Syntax error: the call must contain at least one web server url as argument");
-            }
             listener.Start();
 
             // get args 
             foreach (string s in args)
-            {
-                Console.WriteLine("Listening for connections on " + s);
-            }
+                Console.WriteLine("### Listening for connections on " + s);
+
+
+            //#############################
+            // METHODES DISPONIBLES
+            //#############################
+
+
+
+
+
+
 
             // Trap Ctrl-C on console to exit 
             Console.CancelKeyPress += delegate {
                 // call methods to close socket and exit
                 listener.Stop();
                 listener.Close();
+                Console.WriteLine("HTTP Listener successfully stopped !");
                 Environment.Exit(0);
             };
 
@@ -100,13 +115,10 @@ namespace BasicServerHTTPlistener
                 Console.WriteLine(request.Url.Query);
 
                 //parse params in url
+                NameValueCollection queriesCollection = HttpUtility.ParseQueryString(request.Url.Query);
+                foreach (string key in queriesCollection.AllKeys)
+                    Console.WriteLine(queriesCollection.Get(key));
                 
-                Console.WriteLine("param1 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param1"));
-                Console.WriteLine("param2 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param2"));
-                Console.WriteLine("param3 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param3"));
-                Console.WriteLine("param4 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param4"));
-
-                //
                 Console.WriteLine(documentContents);
 
                 // Obtain a response object.
@@ -119,24 +131,37 @@ namespace BasicServerHTTPlistener
                 MethodInfo method = type.GetMethods().FirstOrDefault(m =>
                     m.Name.Equals(methodCalled, StringComparison.InvariantCultureIgnoreCase));
                 MyMethods c = new MyMethods();
-                string responseString = "";
+
+                string jsonResponse;
 
                 try
                 {
-                    responseString = (string)method.Invoke(c, new object[]{ request.QueryString });
-                    if (string.IsNullOrWhiteSpace(responseString))
-                        response.StatusCode = (int) HttpStatusCode.BadRequest;
+                    if (method != null)
+                    {
+                        jsonResponse = TCJsonParser.Content(method.Invoke(c, new object[] { request.QueryString }).ToString());
+                        if (string.IsNullOrWhiteSpace(jsonResponse))
+                        {
+                            response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            jsonResponse = TCJsonParser.Empty;
+                        }
+                    }
+                    else
+                    {
+                        jsonResponse = TCJsonParser.Message($"Uanble to find method {methodCalled}");
+                        response.StatusCode = (int)HttpStatusCode.NotFound;
+                    }
                 }
-                catch (NullReferenceException)
+                catch (Exception ex)
                 {
-                    responseString = $"Uanble to find method {methodCalled}";
-                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                    jsonResponse = TCJsonParser.Exception(ex.InnerException ?? ex); //Except WatsonBuckets
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 }
 
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(jsonResponse);
                 // Get a response stream and write the response to it.
                 response.ContentLength64 = buffer.Length;
-                System.IO.Stream output = response.OutputStream;
+                response.ContentType = "application/json; charset=utf-8"; 
+                Stream output = response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
                 // You must close the output stream.
                 output.Close();
