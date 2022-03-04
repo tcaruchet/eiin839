@@ -1,15 +1,8 @@
-﻿using System;
+﻿// See https://aka.ms/new-console-template for more information
 
-namespace ExeTest
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            if (args.Length == 1)
-                Console.WriteLine(args[0]);
-            else
-                Console.WriteLine("ExeTest <string parameter>");
-        }
-    }
-}
+using System;
+
+if (args.Length == 1)
+    Console.WriteLine(args[0]);
+else
+    Console.WriteLine("ExeTest <string parameter>");

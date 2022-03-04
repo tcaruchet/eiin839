@@ -1,9 +1,14 @@
 # EIIN839 - ECUE Service oriented computing/WS
 
-This repository contains helpers for the exercises and projects of the Service Oriented Computing / Web Services course of Polytech'Nice-Sophia.
+## TD2 Noté
 
-To use this repository as a base for your project, fork it (there is a button for that on the top-right corner of the Github page), and use the fork as your own project.
+[+] La liste des méthodes est affichée dans la console quand on démarre le serveur HTTP BasicWebServerUrlParser
+- System.String Home(System.Collections.Specialized.NameValueCollection)
+- Int32 Incr(System.Collections.Specialized.NameValueCollection)
+- System.String SuperReflexion(System.Collections.Specialized.NameValueCollection)
+- System.String ExternalExeCall(System.Collections.Specialized.NameValueCollection)
 
-You are also strongly advised to watch the repo (another button on the top-right corner) to be updated when modifications are pushed to it.
+[+] Veillez à bien build tous les projets pour que les EXE soient disponibles
+[+] Dans le projet ExternalExeCall - ligne 10 - veillez à changer le chemin du ExecTest
 
-Note : If you need help forking or syncing your fork with the main repository, you can follow [this procedure](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo).
+NB : j'ai supprimé le projet ReflectionSample

@@ -32,7 +32,6 @@ namespace JCDecaux.Api
         public static async Task<Station> GetStationNearest(string contractName, Position position)
         {
             List<Station> stations = await GetStations<List<Station>>(contractName);
-            //return stations.FirstOrDefault(s => s.Position.Equals(position));
             var nearest = stations.Select(x => new GeoCoordinate(x.Position.Latitude, x.Position.Longitude))
                 .OrderBy(x => x.GetDistanceTo(new GeoCoordinate(position.Latitude, position.Longitude)))
                 .First();

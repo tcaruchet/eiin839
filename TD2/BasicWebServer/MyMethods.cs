@@ -11,9 +11,19 @@ namespace BasicWebServer
 {
     public class MyMethods
     {
-        public string Home()
+        public string Home(NameValueCollection _)
         {
             return "<HTML><BODY> Hello world!</BODY></HTML>";
+        }
+
+        public int Incr(NameValueCollection paramsCollection)
+        {
+            string value = paramsCollection.Get("value");
+            if (value == null || string.IsNullOrWhiteSpace(value))
+                throw new ArgumentNullException("Parameter 'value' cannot be empty or missing !");
+            if (int.TryParse(value, out int result))
+                return result + 1;
+            throw new FormatException("The 'value' given is not a integer (Format or Overflow)!");
         }
 
         public string SuperReflexion(NameValueCollection paramsCollection)

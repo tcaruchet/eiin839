@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Encodings.Web;
 using MyExec;
 using static System.Console;
 
-if (args.Length == 1)
+
+//NET 6.0 notation
+if (args != null && args.Count() == 1)
 {
     List<H1> h1s = new List<H1>();
     foreach (var str in args[0].Split())
