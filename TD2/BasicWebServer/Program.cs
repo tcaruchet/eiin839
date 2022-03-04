@@ -66,7 +66,7 @@ namespace BasicServerHTTPlistener
 
 
 
-            // Trap Ctrl-C on console to exit 
+            // Catch Ctrl-C on console to exit 
             Console.CancelKeyPress += delegate {
                 // call methods to close socket and exit
                 listener.Stop();
@@ -95,38 +95,35 @@ namespace BasicServerHTTPlistener
                 Console.WriteLine($"Received request for {request.Url}");
 
                 //get url protocol
-                Console.WriteLine(request.Url.Scheme);
+                Console.WriteLine($"Scheme : {request.Url.Scheme}");
                 //get user in url
-                Console.WriteLine(request.Url.UserInfo);
+                Console.WriteLine($"UserInfo : {request.Url.UserInfo}");
                 //get host in url
-                Console.WriteLine(request.Url.Host);
+                Console.WriteLine($"Host : {request.Url.Host}");
                 //get port in url
-                Console.WriteLine(request.Url.Port);
+                Console.WriteLine($"Port : {request.Url.Port}");
                 //get path in url 
-                Console.WriteLine(request.Url.LocalPath);
+                Console.WriteLine($"LocalPath : {request.Url.LocalPath}");
 
                 // parse path in url 
                 foreach (string str in request.Url.Segments)
-                {
                     Console.WriteLine(str);
-                }
 
                 //get params un url. After ? and between &
-
-                Console.WriteLine(request.Url.Query);
+                Console.WriteLine($"Query : {request.Url.Query}");
 
                 //parse params in url
                 NameValueCollection queriesCollection = HttpUtility.ParseQueryString(request.Url.Query);
                 foreach (string key in queriesCollection.AllKeys)
                     Console.WriteLine(queriesCollection.Get(key));
                 
-                Console.WriteLine(documentContents);
+                Console.WriteLine($"DocumentContent : {documentContents}");
 
                 // Obtain a response object.
                 HttpListenerResponse response = context.Response;
 
-                string methodCalled = request.Url.LocalPath.Replace("/", "");
 
+                string methodCalled = request.Url.LocalPath.Replace("/", "");
                 // Construct a response.
                 Type type = typeof(MyMethods);
                 MethodInfo method = type.GetMethods().FirstOrDefault(m =>
@@ -159,15 +156,15 @@ namespace BasicServerHTTPlistener
                 }
 
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(jsonResponse);
-                // Get a response stream and write the response to it.
+                // Get a response stream and write the response to it
                 response.ContentLength64 = buffer.Length;
                 response.ContentType = "application/json; charset=utf-8"; 
                 Stream output = response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
-                // You must close the output stream.
+                // close the output stream.
                 output.Close();
             }
-            // Httplistener neither stop ... But Ctrl-C do that ...
+            // Httplistener never stop ... Ctrl-C ...
             // listener.Stop();
         }
     }
