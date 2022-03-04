@@ -158,7 +158,7 @@ namespace BasicServerHTTPlistener
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(jsonResponse);
                 // Get a response stream and write the response to it
                 response.ContentLength64 = buffer.Length;
-                response.ContentType = "application/json; charset=utf-8"; 
+                response.ContentType = jsonResponse.ContainsIgnoreCase("html") ? "text/html" : "application/json; charset=utf-8"; 
                 Stream output = response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
                 // close the output stream.

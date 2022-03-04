@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\TCaruchet.cs" />
     <Compile Include="MyMethods.cs" />
     <Compile Include="Parsers\TCJsonParser.cs" />
