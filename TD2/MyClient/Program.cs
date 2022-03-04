@@ -10,7 +10,7 @@ string BASE_URI = "http://localhost:8080";
 HttpClient client = new HttpClient();
 client.BaseAddress = new Uri(BASE_URI);
 
-//Method called & Parameters Dictionnary
+//Method called & Parameters Dictionnary //call http://localhost:8080/Incr?value=49
 string requestUri = QueryHelpers.AddQueryString("Incr", new Dictionary<string, string>()
 {
     { "value", "49" } //Change 49 
