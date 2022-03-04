@@ -59,9 +59,10 @@ namespace BasicServerHTTPlistener
             // METHODES DISPONIBLES
             //#############################
 
-
-
-
+            Console.WriteLine("####### Methodes Disponibles");
+            foreach (MethodInfo info in typeof(MyMethods).GetMethods())
+                if(info.GetBaseDefinition().DeclaringType != typeof(object))
+                    Console.WriteLine(info.ToString());
 
 
 
