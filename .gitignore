@@ -1,3 +1,4 @@
 **/bin
 **/.vs
 **/obj
+/TD3/packages/Newtonsoft.Json.13.0.1
